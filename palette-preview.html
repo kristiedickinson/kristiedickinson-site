@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kristiedickinson.com — Color Direction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F2EDE4;
+      padding: 40px 24px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+
+    header p { color: #888; font-size: 0.85rem; }
+
+    /* ── Swatch picker ── */
+    .swatch-picker {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0 auto 36px;
+    }
+
+    .swatch-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .swatch-btn .dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      border: 3px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .swatch-btn:hover .dot { transform: scale(1.1); }
+    .swatch-btn.active .dot { border-color: #1a1a1a; transform: scale(1.12); }
+
+    .swatch-btn span {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: #999;
+    }
+
+    .swatch-btn.active span { color: #1a1a1a; font-weight: 600; }
+
+    /* ── The card ── */
+    .card-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .palette-card {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 48px rgba(0,0,0,0.13);
+    }
+
+    /* ── Nav ── */
+    .site-nav {
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      transition: all 0.3s;
+    }
+
+    .nav-name {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    /* ── Away message strip ── */
+    .away-strip {
+      padding: 9px 40px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .away-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4CAF50;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 52px 40px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      transition: background 0.3s;
+    }
+
+    .hero-left {}
+
+    .hero-greeting {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      opacity: 0.5;
+      transition: color 0.3s;
+    }
+
+    .hero-name {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+      transition: color 0.3s;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      display: block;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Hero right ── */
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 4px;
+    }
+
+    .hero-blurb {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1.18rem;
+      line-height: 1.65;
+      transition: color 0.3s;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 13px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Footer strip ── */
+    .card-footer {
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .footer-vibe {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 36px 28px 32px;
+        gap: 28px;
+      }
+      .site-nav, .away-strip, .card-footer { padding-left: 28px; padding-right: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>kristiedickinson.com — Color Direction</h1>
+    <p>Click a color to see it lead.</p>
+  </header>
+
+  <div class="swatch-picker">
+    <button class="swatch-btn" data-color="cream" onclick="setColor('cream')">
+      <div class="dot" style="background:#FFF8EE;"></div>
+      <span>Cream + bold</span>
+    </button>
+    <button class="swatch-btn" data-color="cream-blush" onclick="setColor('cream-blush')">
+      <div class="dot" style="background: linear-gradient(135deg, #FFF8EE 50%, #F2B8C0 50%);"></div>
+      <span>Cream + blush</span>
+    </button>
+    <button class="swatch-btn" data-color="cream-blush-green" onclick="setColor('cream-blush-green')">
+      <div class="dot" style="background: linear-gradient(135deg, #FFF8EE 40%, #F2B8C0 40%, #F2B8C0 70%, #1E4535 70%);"></div>
+      <span>Cream + blush + green</span>
+    </button>
+    <button class="swatch-btn" data-color="green" onclick="setColor('green')">
+      <div class="dot" style="background:#1E4535;"></div>
+      <span>Bottle green</span>
+    </button>
+    <button class="swatch-btn" data-color="orange" onclick="setColor('orange')">
+      <div class="dot" style="background:#E8672A;"></div>
+      <span>Warm orange</span>
+    </button>
+    <button class="swatch-btn" data-color="raspberry" onclick="setColor('raspberry')">
+      <div class="dot" style="background:#C83060;"></div>
+      <span>Raspberry</span>
+    </button>
+    <button class="swatch-btn" data-color="gold" onclick="setColor('gold')">
+      <div class="dot" style="background:#F5C030;"></div>
+      <span>Disco gold</span>
+    </button>
+    <button class="swatch-btn" data-color="blush" onclick="setColor('blush')">
+      <div class="dot" style="background:#F2B8C0;"></div>
+      <span>Blush</span>
+    </button>
+    <button class="swatch-btn" data-color="old-brand" onclick="setColor('old-brand')">
+      <div class="dot" style="background:#5258B8;"></div>
+      <span>Old brand</span>
+    </button>
+    <button class="swatch-btn" data-color="evolved" onclick="setColor('evolved')">
+      <div class="dot" style="background: linear-gradient(135deg, #FFF8EE 50%, #5258B8 50%);"></div>
+      <span>Evolved</span>
+    </button>
+    <button class="swatch-btn" data-color="periwinkle-orange" onclick="setColor('periwinkle-orange')">
+      <div class="dot" style="background: linear-gradient(135deg, #5258B8 50%, #E8672A 50%);"></div>
+      <span>Periwinkle + orange</span>
+    </button>
+  </div>
+
+  <div class="card-wrap">
+    <div class="palette-card">
+
+      <!-- Nav -->
+      <nav class="site-nav" id="nav">
+        <span class="nav-name" id="navName">Kristie Dickinson</span>
+        <div class="nav-links" id="navLinks">
+          <a href="#">writing</a>
+          <a href="#">the book</a>
+          <a href="#">about me</a>
+          <a href="#">let's keep in touch</a>
+        </div>
+      </nav>
+
+      <!-- Away message -->
+      <div class="away-strip" id="awayStrip">
+        <span class="away-dot"></span>
+        <span id="awayText">away message: writing a memoir, raising a toddler, looking for the best croissant in Boston</span>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero" id="hero">
+        <div class="hero-left">
+          <div class="hero-greeting" id="heroGreeting">hi, i'm</div>
+          <div class="hero-name" id="heroName">
+            Kristie<br><em>Dickinson.</em>
+          </div>
+          <button class="hero-btn" id="heroBtn">come hang out →</button>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-blurb" id="heroBlurb">
+            I write about sex, love, and what it means to be human in an age that keeps trying to make us less so. I have a podcast, a memoir in progress, and a lot of feelings about the early internet.
+          </div>
+          <div class="hero-tags">
+            <span class="tag" id="tag1">memoirist</span>
+            <span class="tag" id="tag2">podcaster</span>
+            <span class="tag" id="tag3">design thinker</span>
+            <span class="tag" id="tag4">former professor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer" id="cardFooter">
+        <span id="footerLabel">Cream leads</span>
+        <span class="footer-vibe" id="footerVibe">Classic · Warm · Grounded</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const themes = {
+      cream: {
+        heroBg:      '#FFF8EE',
+        navBg:       '#FFF8EE',
+        navText:     '#1E4535',
+        awayBg:      '#F5EDD8',
+        awayText:    '#1E4535',
+        greeting:    '#1E4535',
+        name:        '#1E4535',
+        blurb:       '#1E4535',
+        btnBg:       '#E8672A',
+        btnText:     '#fff',
+        tagBg:       '#F2B8C0',
+        tagText:     '#7A1A40',
+        footerBg:    '#F5EDD8',
+        footerText:  '#1E4535',
+        vibeBg:      '#C83060',
+        vibeText:    '#fff',
+        label:       'Cream + orange + raspberry',
+        vibe:        'Warm · Grounded · Bold details',
+      },
+      'cream-blush': {
+        heroBg:      '#FFF8EE',
+        navBg:       '#FFF8EE',
+        navText:     '#7A1A40',
+        awayBg:      '#F9EEF0',
+        awayText:    '#7A1A40',
+        greeting:    '#C83060',
+        name:        '#7A1A40',
+        blurb:       '#7A1A40',
+        btnBg:       '#F2B8C0',
+        btnText:     '#7A1A40',
+        tagBg:       '#F2B8C0',
+        tagText:     '#7A1A40',
+        footerBg:    '#F9EEF0',
+        footerText:  '#7A1A40',
+        vibeBg:      '#C83060',
+        vibeText:    '#fff',
+        label:       'Cream + blush (no bold)',
+        vibe:        'Soft · Sweet · Safe',
+      },
+      'cream-blush-green': {
+        heroBg:      '#FFF8EE',
+        navBg:       '#FFF8EE',
+        navText:     '#1E4535',
+        awayBg:      '#F5EDD8',
+        awayText:    '#1E4535',
+        greeting:    '#C83060',
+        name:        '#1E4535',
+        blurb:       '#1E4535',
+        btnBg:       '#1E4535',
+        btnText:     '#FFF8EE',
+        tagBg:       '#F2B8C0',
+        tagText:     '#7A1A40',
+        footerBg:    '#F5EDD8',
+        footerText:  '#1E4535',
+        vibeBg:      '#C83060',
+        vibeText:    '#fff',
+        label:       'Cream + blush + green',
+        vibe:        'Warm · Personal · Balanced',
+      },
+      'old-brand': {
+        heroBg:      '#5258B8',
+        navBg:       '#5258B8',
+        navText:     '#fff',
+        awayBg:      '#4650A8',
+        awayText:    '#D4A843',
+        greeting:    '#C8CCF0',
+        name:        '#D4A843',
+        blurb:       '#C8CCF0',
+        btnBg:       '#E8672A',
+        btnText:     '#fff',
+        tagBg:       'rgba(255,255,255,0.18)',
+        tagText:     '#fff',
+        footerBg:    '#4650A8',
+        footerText:  '#fff',
+        vibeBg:      '#D4A843',
+        vibeText:    '#4650A8',
+        label:       'Old brand — periwinkle leads',
+        vibe:        'Familiar · Faithful · S&D',
+      },
+      'evolved': {
+        heroBg:      '#FFF8EE',
+        navBg:       '#FFF8EE',
+        navText:     '#5258B8',
+        awayBg:      '#EEEEF8',
+        awayText:    '#5258B8',
+        greeting:    '#E8672A',
+        name:        '#5258B8',
+        blurb:       '#5258B8',
+        btnBg:       '#E8672A',
+        btnText:     '#fff',
+        tagBg:       '#D4A843',
+        tagText:     '#5258B8',
+        footerBg:    '#EEEEF8',
+        footerText:  '#5258B8',
+        vibeBg:      '#5258B8',
+        vibeText:    '#fff',
+        label:       'Evolved — cream base, old accent colors',
+        vibe:        'Same soul · New energy',
+      },
+      'periwinkle-orange': {
+        heroBg:      '#FFF8EE',
+        navBg:       '#FFF8EE',
+        navText:     '#5258B8',
+        awayBg:      '#EEEEF8',
+        awayText:    '#5258B8',
+        greeting:    '#E8672A',
+        name:        '#E8672A',
+        blurb:       '#5258B8',
+        btnBg:       '#5258B8',
+        btnText:     '#fff',
+        tagBg:       '#EEEEF8',
+        tagText:     '#5258B8',
+        footerBg:    '#EEEEF8',
+        footerText:  '#5258B8',
+        vibeBg:      '#E8672A',
+        vibeText:    '#fff',
+        label:       'Periwinkle + orange',
+        vibe:        'Bold contrast · Old meets new',
+      },
+      green: {
+        heroBg:      '#1E4535',
+        navBg:       '#1E4535',
+        navText:     '#FFF8EE',
+        awayBg:      '#173629',
+        awayText:    '#F5C030',
+        greeting:    '#FFF8EE',
+        name:        '#FFF8EE',
+        blurb:       '#FFF8EE',
+        btnBg:       '#E8672A',
+        btnText:     '#fff',
+        tagBg:       'rgba(255,248,238,0.15)',
+        tagText:     '#FFF8EE',
+        footerBg:    '#173629',
+        footerText:  '#FFF8EE',
+        vibeBg:      '#F5C030',
+        vibeText:    '#1E4535',
+        label:       'Bottle green leads',
+        vibe:        'Rich · Unexpected · Literary',
+      },
+      orange: {
+        heroBg:      '#E8672A',
+        navBg:       '#E8672A',
+        navText:     '#FFF8EE',
+        awayBg:      '#D05820',
+        awayText:    '#FFF8EE',
+        greeting:    '#FFF8EE',
+        name:        '#FFF8EE',
+        blurb:       '#FFF8EE',
+        btnBg:       '#1E4535',
+        btnText:     '#FFF8EE',
+        tagBg:       'rgba(255,248,238,0.2)',
+        tagText:     '#FFF8EE',
+        footerBg:    '#D05820',
+        footerText:  '#FFF8EE',
+        vibeBg:      '#FFF8EE',
+        vibeText:    '#D05820',
+        label:       'Warm orange leads',
+        vibe:        'Bold · Citrus · Alive',
+      },
+      raspberry: {
+        heroBg:      '#C83060',
+        navBg:       '#C83060',
+        navText:     '#FFF8EE',
+        awayBg:      '#A82050',
+        awayText:    '#F5C030',
+        greeting:    '#FFF8EE',
+        name:        '#FFF8EE',
+        blurb:       '#FFF8EE',
+        btnBg:       '#E8672A',
+        btnText:     '#fff',
+        tagBg:       'rgba(255,248,238,0.18)',
+        tagText:     '#FFF8EE',
+        footerBg:    '#A82050',
+        footerText:  '#FFF8EE',
+        vibeBg:      '#F5C030',
+        vibeText:    '#A82050',
+        label:       'Raspberry leads',
+        vibe:        'Playful · Queen of Hearts · Warm',
+      },
+      gold: {
+        heroBg:      '#F5C030',
+        navBg:       '#F5C030',
+        navText:     '#1E4535',
+        awayBg:      '#E0AD20',
+        awayText:    '#1E4535',
+        greeting:    '#1E4535',
+        name:        '#1E4535',
+        blurb:       '#1E4535',
+        btnBg:       '#C83060',
+        btnText:     '#fff',
+        tagBg:       '#1E4535',
+        tagText:     '#F5C030',
+        footerBg:    '#E0AD20',
+        footerText:  '#1E4535',
+        vibeBg:      '#1E4535',
+        vibeText:    '#F5C030',
+        label:       'Disco gold leads',
+        vibe:        'Joyful · Bright · Festive',
+      },
+      blush: {
+        heroBg:      '#F2B8C0',
+        navBg:       '#F2B8C0',
+        navText:     '#7A1A40',
+        awayBg:      '#E8A4B0',
+        awayText:    '#7A1A40',
+        greeting:    '#7A1A40',
+        name:        '#7A1A40',
+        blurb:       '#7A1A40',
+        btnBg:       '#1E4535',
+        btnText:     '#FFF8EE',
+        tagBg:       '#FFF8EE',
+        tagText:     '#C83060',
+        footerBg:    '#E8A4B0',
+        footerText:  '#7A1A40',
+        vibeBg:      '#C83060',
+        vibeText:    '#fff',
+        label:       'Blush leads',
+        vibe:        'Soft · Romantic · Warm',
+      },
+    };
+
+    function setColor(name) {
+      const t = themes[name];
+      const s = (id, prop, val) => document.getElementById(id).style[prop] = val;
+
+      s('hero',        'background', t.heroBg);
+      s('nav',         'background', t.navBg);
+      s('navName',     'color',      t.navText);
+      s('navLinks',    'color',      t.navText);
+      s('awayStrip',   'background', t.awayBg);
+      s('awayText',    'color',      t.awayText);
+      s('heroGreeting','color',      t.greeting);
+      s('heroName',    'color',      t.name);
+      s('heroBlurb',   'color',      t.blurb);
+      s('heroBtn',     'background', t.btnBg);
+      s('heroBtn',     'color',      t.btnText);
+      s('cardFooter',  'background', t.footerBg);
+      s('footerLabel', 'color',      t.footerText);
+      s('footerVibe',  'background', t.vibeBg);
+      s('footerVibe',  'color',      t.vibeText);
+      s('footerLabel', 'textContent', t.label);   // won't work with s(), do below
+      document.getElementById('footerLabel').textContent = t.label;
+      document.getElementById('footerVibe').textContent  = t.vibe;
+
+      // nav link colors
+      document.querySelectorAll('#navLinks a').forEach(a => a.style.color = t.navText);
+
+      // tags
+      ['tag1','tag2','tag3','tag4'].forEach(id => {
+        s(id, 'background', t.tagBg);
+        s(id, 'color',      t.tagText);
+      });
+
+      // active swatch
+      document.querySelectorAll('.swatch-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-color="${name}"]`).classList.add('active');
+    }
+
+    setColor('cream');
+  </script>
+
+</body>
+</html>
