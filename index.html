@@ -15,7 +15,10 @@
   header{display:flex;justify-content:space-between;align-items:baseline;padding:18px 28px 14px;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
   header{align-items:center} header .name{font-family:"DM Serif Display",Georgia,serif;font-size:28px;letter-spacing:0;text-transform:none;color:var(--cream);text-decoration:none}
   header .top a{font-family:"DM Serif Display",Georgia,serif;font-size:20px;letter-spacing:0;text-transform:none;color:var(--cream);text-decoration:none;margin-left:44px} header .top a:hover{color:var(--brass)}
-  .room{position:relative;width:100%;max-width:calc((100vh - 60px) * 3480 / 2964);margin:0 auto;aspect-ratio:3480/2964;overflow:hidden;touch-action:none}
+  /* header lines up with the room's left + right edges (room width = --rw); keeps a small gutter only when the room fills the window */
+  :root{--rw:calc((100vh - 60px) * 3480 / 2964)}
+  header{max-width:var(--rw);margin:0 auto;padding-left:max(0px,calc(28px - (100vw - var(--rw)) / 2));padding-right:max(0px,calc(28px - (100vw - var(--rw)) / 2))}
+  .room{position:relative;width:100%;max-width:var(--rw);margin:0 auto;aspect-ratio:3480/2964;overflow:hidden;touch-action:none}
   .room > img,.room > div{position:absolute;display:block}
   .room img.base{inset:0;width:100%;height:100%}
   .room .mat,.room .art{inset:0;pointer-events:none}
