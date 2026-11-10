@@ -61,6 +61,7 @@
   .room .ch[data-h="c"]{background:#C9A23A}
   .room.editing .ch{display:block}
   .mlist{display:none}
+  .room.loading>*{visibility:hidden}  /* hold the wall back until every piece has arrived, then show it all at once */
   /* essays pop-up */
   dialog.essays{max-width:760px}
   .es .x{position:absolute;top:18px;right:22px;background:none;border:none;padding:4px 8px;font-size:28px;line-height:1;color:var(--green);cursor:pointer;letter-spacing:0;text-transform:none}
@@ -119,7 +120,7 @@
 </head>
 <body>
 <header><a class="name" href="./">Kristie Dickinson</a><nav class="top"><a href="about.html">About</a><a href="#" id="topHello">Say hello</a></nav></header>
-<div class="room" id="room">
+<div class="room loading" id="room">
   <img class="base" src="img/wall-2400.webp" srcset="img/wall-1200.webp 1200w, img/wall-2400.webp 2400w" sizes="(max-width:700px) 100vw, 1400px" fetchpriority="high" alt="Kristie's living room: a green velvet couch under a gallery wall of frames">
   <div class="mat" style="clip-path:polygon(11.437% 8.131%,22.615% 8.030%,22.989% 18.421%,11.897% 18.657%);background:#ECE8E0"></div>
   <div class="art" data-art="talk" style="clip-path:polygon(29.282% 6.005%,43.649% 5.938%,43.707% 28.880%,29.713% 28.880%);background:#222"><img alt="" src="img/art1.webp"></div>
@@ -220,7 +221,7 @@ const hot={"cheetah": [[0, 1440], [352, 1440], [352, 2140], [0, 2140]], "banker"
 Object.entries(hot).forEach(([k,pts])=>hotspot(pts,'Turn the lamp off or on','switch',()=>room.classList.toggle('off-'+k)));
 hotspot([[3160, 2060], [3480, 2060], [3480, 2340], [3160, 2340]],'Say hello','switch',()=>open_('Say hello',null,'hello'));
 if(QS.get('opt')==='D') hotspot([[2790,2040],[3120,2040],[3120,2240],[2790,2240]],'Say hello','switch',()=>open_('Say hello',null,'hello'));
-const ART={boots:{t:'These Boots',p:"A real print from my living room! My mom got me these sparkly boots and now they're the only thing I wear onstage at shows.",by:'Print by Vertigo Artography'},
+const ART={boots:{t:'',p:"A real print from my living room! My mom got me these sparkly boots and now they're the only thing I wear onstage at shows.",by:'Print by Vertigo Artography'},
   kiss:{t:'',p:"My favorite TV kiss, re-mixed by a brilliant artist (Does this make you think of The OC or Spider-Man?)",by:'Print by Jenifer Prince'}};
 function openArt(k){const a=ART[k];document.getElementById('dt').textContent=a.t;document.getElementById('dp').textContent=a.p;dx.innerHTML='<p class="by">'+a.by+'</p>';dlg.classList.remove('wide','essays');dlg.showModal();}
 hotspot([[1700,150],[2100,150],[2100,660],[1700,660]],'A print I love','frame',()=>openArt('boots'));
@@ -312,6 +313,11 @@ copy.onclick=async()=>{const out={items:{},arts:{}};
   try{await navigator.clipboard.writeText(txt);copy.textContent='Copied!';}catch(e){prompt('Copy this:',txt);}
   setTimeout(()=>copy.textContent='Copy positions for Claude',1500);};
 reset.onclick=()=>{if(confirm('Put everything back to where Claude last saved it?')){try{localStorage.removeItem(KEY)}catch(e){} location.reload();}};
+
+// show the whole wall at once: wait for every picture in the room (8-second safety net so it never stays hidden)
+(function(){let shown=false;const show=()=>{if(shown)return;shown=true;drawCord();room.classList.remove('loading');};
+  Promise.all([...room.querySelectorAll('img')].map(i=>i.complete?null:new Promise(r=>{i.addEventListener('load',r,{once:true});i.addEventListener('error',r,{once:true});}))).then(show);
+  setTimeout(show,8000);})();
 </script>
 </body>
 </html>
